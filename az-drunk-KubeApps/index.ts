@@ -178,7 +178,7 @@ const rs = (async () => {
 
     await MySql({
       name: 'singa-sql',
-      namespace: 'ocp-bp-dcp-sit',
+      namespace: 'tools',
 
       storageClassName,
       vaultInfo,
