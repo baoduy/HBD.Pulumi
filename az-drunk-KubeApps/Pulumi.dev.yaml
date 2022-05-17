@@ -1,0 +1,3 @@
+config:
+  azure-native:location: Southeast Asia
+  pulumi:template: azure-typescript

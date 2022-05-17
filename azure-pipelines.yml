@@ -1,0 +1,94 @@
+#1. Get stack name from branch name
+#2. Install npm packages for _Share ans subsequence projets.
+#3. Run Pulumi up with --skip-preview and --yes
+
+# stage 1: Run Global
+# stage 2: Run CloudPC, Share
+# stage 3: Run Aks
+# stage 4: KubeApps
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - releases/*
+    exclude:
+    - main
+  paths:
+    include:
+      - az-drunk-Global
+      - az-drunk-Aks
+      - az-drunk-KubeApps
+
+variables:
+  - group: Pulumi
+  - name: workDirGlobal
+    value: './az-drunk-Global'
+#  - name: workDirCloudPc
+#    value: './az-calibers-CloudPC'
+#  - name: workDirShare
+#    value: './az-drunk-Share'
+#  - name: workDirPublicApps
+#    value: './az-drunk-PublicApps'
+  - name: workDirAks
+    value: './az-drunk-Aks'
+  - name: workDirKubeApps
+    value: './az-drunk-KubeApps'
+
+stages:
+# stage 1: Run Global
+- stage: 'deploy_global'
+  displayName: 'Global'
+  jobs:
+  - job: 'deploy_pulumi'
+    displayName: Build & Deploy
+    steps:
+    - template: build-template.yml
+      parameters:
+        stack: global
+        workDir: $(workDirGlobal)
+    - template: deploy-template.yml
+      parameters:
+        stack: global
+        workDir: $(workDirGlobal)
+
+
+# stage 3: Run Aks
+- stage: 'deploy_aks'
+  displayName: 'Aks'
+  dependsOn: deploy_global
+  condition: succeeded('deploy_global')
+  jobs:
+  - job: 'deploy_pulumi'
+    displayName: Build & Deploy
+    steps:
+    - template: build-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDirAks)
+    - template: deploy-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDirAks)
+        isRefresh: false
+
+# stage 4: KubeApps
+- stage: 'deploy_kubeapps'
+  displayName: 'Kube Apps'
+  dependsOn: deploy_aks
+  condition: succeeded('deploy_aks')
+  jobs:
+  - job: 'deploy_pulumi'
+    displayName: Build & Deploy
+    steps:
+    - template: build-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDirKubeApps)
+        forceYarnInstall: false
+    - template: deploy-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDirKubeApps)
+        isRefresh: false
+

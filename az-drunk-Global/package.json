@@ -1,0 +1,26 @@
+{
+  "name": "az-hy-Global",
+  "scripts": {
+    "new-stack": "pulumi stack init --secrets-provider=passphrase",
+    "up": "pulumi up --yes --skip-preview",
+    "reup": "pulumi up --refresh --yes --skip-preview",
+    "destroy": "pulumi destroy --yes --skip-preview",
+    "update": "ncu -u && yarn install",
+    "export": "pulumi stack export --file state.json",
+    "import": "pulumi stack import --file state.json"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.18"
+  },
+  "dependencies": {
+    "@azure/identity": "^2.0.3",
+    "@azure/keyvault-secrets": "^4.3.0",
+    "@azure/ms-rest-js": "^2.6.0",
+    "@azure/ms-rest-nodeauth": "^3.1.1",
+    "@pulumi/azure-native": "^1.58.0",
+    "@pulumi/pulumi": "^3.24.1",
+    "axios": "^0.26.0",
+    "typescript": "^4.5.5",
+    "url-join-ts": "^1.0.5"
+  }
+}

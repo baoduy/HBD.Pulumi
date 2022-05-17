@@ -1,0 +1,25 @@
+{
+  "name": "az-ky-kube-apps",
+  "scripts": {
+    "prestart": "PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS='true'",
+    "start": "pulumi up",
+    "up": "PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS='true' pulumi up --yes --skip-preview",
+    "reup": "PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS='true' pulumi up --refresh --yes --skip-preview",
+    "update": "ncu -u && yarn install",
+    "export": "pulumi stack export --file state.json",
+    "import": "pulumi stack import --file state.json"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.18"
+  },
+  "dependencies": {
+    "@azure/identity": "^2.0.3",
+    "@azure/ms-rest-js": "^2.6.0",
+    "@azure/ms-rest-nodeauth": "^3.1.1",
+    "@azure/keyvault-keys": "^4.3.0",
+    "@azure/keyvault-secrets": "^4.3.0",
+    "@pulumi/azure-native": "^1.58.0",
+    "@pulumi/kubernetes": "^3.16.0",
+    "@pulumi/pulumi": "^3.24.1"
+  }
+}

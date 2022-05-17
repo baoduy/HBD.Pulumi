@@ -1,0 +1,39 @@
+trigger: none
+
+# This is not support time-zone so using pipeline schedule instead
+#schedules:
+#- cron: '0 8 * * *'
+#  always: true
+#  displayName: Start AKS every day at 08AM
+#  branches:
+#    include:
+#      - releases/sandbox
+
+variables:
+  - group: Pulumi
+  - name: workDir
+    value: './az-drunk-AksOnOff'
+  - name: azureSubscription
+    value: 'Az-Drunk'
+stages:
+- stage: 'deploy_aks_on'
+  displayName: 'Turn Aks On'
+  jobs:
+  - job: 'deploy_pulumi'
+    displayName: Turn Aks On
+    steps:
+    - template: ../build-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDir)
+        
+    - task: Pulumi@1
+      displayName: 'pulumi destroy'
+      env:
+        PULUMI_ACCESS_TOKEN: $(PULUMI_ACCESS_TOKEN)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        command: 'destroy'
+        cwd: $(workDir)
+        stack: $(build.sourceBranchName)
+        args: '--yes'

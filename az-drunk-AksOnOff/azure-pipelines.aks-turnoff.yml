@@ -1,0 +1,32 @@
+trigger: none
+
+# This is not support time-zone so using pipeline schedule instead
+#schedules:
+#- cron: '59 23 * * *'
+#  always: true
+#  displayName: Stop AKS every night at 11PM
+#  branches:
+#    include:
+#      - releases/sandbox
+
+variables:
+  - group: Pulumi
+  - name: workDir
+    value: './az-drunk-AksOnOff'
+
+stages:
+- stage: 'deploy_aks_off'
+  displayName: 'Turn Aks Off'
+  jobs:
+  - job: 'deploy_pulumi'
+    displayName: Deploy
+    steps:
+    - template: ../build-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDir)
+
+    - template: ../deploy-template.yml
+      parameters:
+        stack: $(build.sourceBranchName)
+        workDir: $(workDir)

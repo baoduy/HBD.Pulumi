@@ -1,0 +1,45 @@
+{
+  "name": "drunk-coding",
+  "version": "1.0.2",
+  "scripts": {
+    "preinstall": "node install-chilkat.js",
+    "update": "ncu -u && yarn install",
+    "test-leak": "cross-env PULUMI_DEBUG_PROMISE_LEAKS=true TEST_MODE=true TS_NODE_PROJECT='./tsconfig.test.json' mocha -r ts-node/register 'z_tests/**/*.ts'",
+    "test": "cross-env TEST_MODE=true TS_NODE_PROJECT='./tsconfig.test.json' mocha -r ts-node/register 'z_tests/**/*.ts'",
+    "test-cover": "cross-env TEST_MODE=true TS_NODE_PROJECT='./tsconfig.test.json' nyc mocha -r ts-node/register 'z_tests/**/*.ts'"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.1.0",
+    "@types/mssql": "^7.1.5",
+    "@types/netmask": "^1.0.30",
+    "@types/node": "^17.0.18",
+    "@types/node-forge": "^1.0.0",
+    "chai": "^4.3.6",
+    "cross-env": "^7.0.3",
+    "mocha": "^9.2.0",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.5.0"
+  },
+  "dependencies": {
+    "@azure/identity": "^2.0.3",
+    "@azure/keyvault-keys": "^4.3.0",
+    "@azure/keyvault-secrets": "^4.3.0",
+    "@chilkat/ck-node14-macosx": "^9.50.89",
+    "@pulumi/azure": "^4.38.0",
+    "@pulumi/azure-native": "^1.58.0",
+    "@pulumi/azuread": "5.17.0",
+    "@pulumi/kubernetes": "^3.16.0",
+    "@pulumi/pulumi": "^3.24.1",
+    "@pulumi/random": "^4.3.1",
+    "axios": "^0.26.0",
+    "dayjs": "^1.10.7",
+    "mssql": "8.0.2",
+    "netmask": "^2.0.2",
+    "node-forge": "^1.2.1",
+    "to-words": "^3.1.0",
+    "typescript": "^4.5.5",
+    "url-join": "^4.0.1",
+    "url-join-ts": "^1.0.5"
+  }
+}

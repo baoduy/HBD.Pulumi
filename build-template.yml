@@ -1,0 +1,58 @@
+parameters:
+  - name: stack
+    type: string
+  - name: workDir
+    type: string
+  - name: forceYarnInstall
+    type: string
+    default: false
+  - name: azureSubscription
+    type: string
+    default: 'Az-Drunk'
+
+steps:
+  - checkout: self
+
+  - script: echo "stack:${{ parameters.stack }}"
+    displayName: 'echo environment'
+
+  # Work around solution to install latest pulumi SDK automatically
+  - task: Pulumi@1
+    displayName: 'Pulumi list stacks'
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      command: 'stack'
+      args: 'ls'
+      cwd: ${{ parameters.workDir }}
+      stack: ${{ parameters.stack }}
+
+  - task: NodeTool@0
+    displayName: 'install node'
+    inputs:
+      versionSpec: '14.x'
+
+  - task: YarnInstaller@3
+    displayName: 'install yarn'
+    inputs:
+      versionSpec: '1.x'
+      checkLatest: true
+
+  - task: Yarn@3
+    displayName: 'install _Share'
+    inputs:
+      projectDirectory: './_Shared'
+      arguments: 'install'
+
+  - task: Yarn@3
+    displayName: 'install'
+    condition: eq(${{ parameters.forceYarnInstall }}, false)
+    inputs:
+      projectDirectory: ${{ parameters.workDir }}
+      arguments: 'install'
+
+  - task: Yarn@3
+    displayName: 'install with force'
+    condition: eq(${{ parameters.forceYarnInstall }}, true)
+    inputs:
+      projectDirectory: ${{ parameters.workDir }}
+      arguments: 'install --force'

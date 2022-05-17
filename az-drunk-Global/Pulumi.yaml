@@ -1,0 +1,3 @@
+name: azure-drunk-Global
+runtime: nodejs
+description: The Operation helper for AKS. This can help to turn on off the AKS scheduling using Azure DevOps

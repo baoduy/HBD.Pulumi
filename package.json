@@ -1,0 +1,16 @@
+{
+  "name": "azure-typescript",
+  "scripts": {
+    "update-all": "node update-all.js",
+    "install-all": "node install-all.js"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.26",
+    "prettier": "^2.3.2"
+  },
+  "dependencies": {
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}

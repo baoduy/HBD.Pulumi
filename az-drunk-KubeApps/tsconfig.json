@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "files": ["index.ts"],
+  "exclude": ["**/z_tests/", "**/node_modules/", "**/dist/"]
+}

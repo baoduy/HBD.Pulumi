@@ -1,0 +1,49 @@
+parameters:
+  - name: stack
+    type: string
+  - name: workDir
+    type: string
+  - name: isRefresh
+    type: string
+    default: false
+  - name: azureSubscription
+    type: string
+    default: 'Az-Drunk'
+
+steps:
+  - task: Pulumi@1
+    displayName: 'pulumi up with refresh'
+    condition: eq(${{ parameters.isRefresh }}, true)
+    continueOnError: true
+    env:
+      PULUMI_ACCESS_TOKEN: $(PULUMI_ACCESS_TOKEN)
+    inputs:
+      azureSubscription: 'Az-Drunk'
+      command: 'up'
+      cwd: ${{ parameters.workDir }}
+      stack: ${{ parameters.stack }}
+      args: '--yes --refresh --skip-preview'
+
+  - task: Pulumi@1
+    displayName: 'pulumi up after refresh'
+    condition: eq(${{ parameters.isRefresh }}, true)
+    continueOnError: true
+    env:
+      PULUMI_ACCESS_TOKEN: $(PULUMI_ACCESS_TOKEN)
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      command: 'up'
+      cwd: ${{ parameters.workDir }}
+      stack: ${{ parameters.stack }}
+      args: '--yes --skip-preview'
+
+  - task: Pulumi@1
+    displayName: 'pulumi up'
+    env:
+      PULUMI_ACCESS_TOKEN: $(PULUMI_ACCESS_TOKEN)
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      command: 'up'
+      cwd: ${{ parameters.workDir }}
+      stack: ${{ parameters.stack }}
+      args: '--yes --skip-preview'
