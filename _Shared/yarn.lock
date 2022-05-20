@@ -518,11 +518,6 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@chilkat/ck-node14-macosx@^9.50.90":
-  version "9.50.90"
-  resolved "https://registry.yarnpkg.com/@chilkat/ck-node14-macosx/-/ck-node14-macosx-9.50.90.tgz#7cdf29f4a5b80e89d3fa2f6b89e3fa8153a18c4a"
-  integrity sha512-ItZA+FVcmCjorpX7Q28hA0axrmGZ+t7ivobDcCrm0QRcOneqlRQ0aPC+8u3bcGvwYGzgcVKS8PQw9dvoWuW8zQ==
-
 "@cspotcode/source-map-consumer@0.8.0":
   version "0.8.0"
   resolved "https://registry.npmjs.org/@cspotcode/source-map-consumer/-/source-map-consumer-0.8.0.tgz"
