@@ -26,16 +26,21 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install
-    
+        
     - name: Install Pulumi CLI
       uses: pulumi/setup-pulumi@v2
-      
+    
+    - name: Install Global npm
+      working-directory: az-drunk-Global
+      run: npm install
+    
     - name: Pulumi CLI Action
       uses: pulumi/actions@v3.15.0
+      env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       with:
         # Pulumi command to run, eg. up
-        command: up --yes --skip-preview
+        command: up
         # Which stack you want to apply to, eg. dev
         stack-name: ${{ env.Stack_Name }}
         # Location of your Pulumi files. Defaults to ./
