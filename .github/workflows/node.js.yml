@@ -42,7 +42,7 @@ jobs:
         # Pulumi command to run, eg. up
         command: up
         # Which stack you want to apply to, eg. dev
-        stack-name: ${{ env.Stack_Name }}
+        stack-name: global
         # Location of your Pulumi files. Defaults to ./
         work-dir: az-drunk-Global
       
