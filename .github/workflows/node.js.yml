@@ -7,6 +7,9 @@ on:
   push:
     branches: [ release/* ]
 
+env:
+  Stack_Name: dev # TODO get stack from branch name
+  
 jobs:
   build:
 
@@ -28,11 +31,13 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/setup-pulumi@v2
       
-    - name: Extract branch name
-      id: extract
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      
-    - name: Print branch name
-      run: echo "${{ steps.extract.outputs.branch }}"
+    - name: Pulumi CLI Action
+      uses: pulumi/actions@v3.15.0
+      with:
+        # Pulumi command to run, eg. up
+        command: pulumi up --yes --skip-preview
+        # Which stack you want to apply to, eg. dev
+        stack-name: ${{ env.Stack_Name }}
+        # Location of your Pulumi files. Defaults to ./
+        work-dir: az-drunk-Global
       
