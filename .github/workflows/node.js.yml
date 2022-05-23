@@ -35,7 +35,7 @@ jobs:
       uses: pulumi/actions@v3.15.0
       with:
         # Pulumi command to run, eg. up
-        command: pulumi up --yes --skip-preview
+        command: up --yes --skip-preview
         # Which stack you want to apply to, eg. dev
         stack-name: ${{ env.Stack_Name }}
         # Location of your Pulumi files. Defaults to ./
