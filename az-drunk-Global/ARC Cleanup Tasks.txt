@@ -1,0 +1,24 @@
+FILTER="--filter 'singa.bms.api:.*' \
+  --filter 'singa.portal:.*' \
+  --ago 90d --keep 30"
+
+PURGE_CMD="acr purge $FILTER"
+
+PURGE_UNTAG_CMD="acr purge $FILTER --untagged"
+
+az acr task create --name purgeTask \
+  --cmd "$PURGE_CMD" \
+  --schedule "0 1 * * Sun" \
+  --registry drunk4acr \
+  --timeout 3600 \
+  --context /dev/null
+
+az acr task create --name purgeUnTagTask \
+  --cmd "$PURGE_UNTAG_CMD" \
+  --schedule "0 1 * * Sun" \
+  --registry drunk4acr \
+  --timeout 3600 \
+  --context /dev/null
+
+az acr task run -n purgeTask -r drunk4acr
+az acr task run -n purgeUnTagTask -r drunk4acr

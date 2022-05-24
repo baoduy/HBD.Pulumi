@@ -17,6 +17,7 @@ interface Props extends DefaultAksArgs {
     username: Input<string>;
     password: Input<string>;
     database: Input<string>;
+    requiredSSL?:boolean;
   };
 }
 
