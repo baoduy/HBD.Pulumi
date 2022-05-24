@@ -30,6 +30,10 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/setup-pulumi@v2
     
+    - name: Install Share npm
+      working-directory: _Shared
+      run: npm install
+      
     - name: Install Global npm
       working-directory: az-drunk-Global
       run: npm install
