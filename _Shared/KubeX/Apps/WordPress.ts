@@ -46,7 +46,7 @@ export default ({
       WORDPRESS_DB_USER: database.username,
       WORDPRESS_DB_PASSWORD: database.password,
       WORDPRESS_DB_NAME: database.database,
-      WORDPRESS_CONFIG_EXTRA: database.requiredSSL?"define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL )":''
+      WORDPRESS_CONFIG_EXTRA: database.requiredSSL?"define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);":''
     },
     podConfig: {
       port: 80,

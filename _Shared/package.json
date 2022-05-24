@@ -25,6 +25,7 @@
     "@azure/identity": "^2.0.4",
     "@azure/keyvault-keys": "^4.4.0",
     "@azure/keyvault-secrets": "^4.4.0",
+    "@chilkat/ck-node14-macosx": "^9.50.90",
     "@pulumi/azure": "^5.5.0",
     "@pulumi/azure-native": "^1.64.1",
     "@pulumi/azuread": "5.22.0",
