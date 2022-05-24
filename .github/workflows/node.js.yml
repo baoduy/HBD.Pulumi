@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -30,6 +30,11 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/setup-pulumi@v2
     
+    # Share
+    - name: Install Tool npm
+      working-directory: _Shared
+      run: npm run preinstall
+      
     - name: Install Share npm
       working-directory: _Shared
       run: npm install
