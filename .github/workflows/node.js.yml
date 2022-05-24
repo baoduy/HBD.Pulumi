@@ -57,7 +57,7 @@ jobs:
       working-directory: az-drunk-Aks
       run: npm install
     
-    - name: Deploy Global
+    - name: Deploy AKS
       uses: pulumi/actions@v3.15.0
       env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -71,11 +71,11 @@ jobs:
         work-dir: az-drunk-Aks
         
     # KubeApps
-    - name: Install AKS npm
+    - name: Install KubeApps npm
       working-directory: az-drunk-KubeApps
       run: npm install
     
-    - name: Deploy Global
+    - name: Deploy KubeApps
       uses: pulumi/actions@v3.15.0
       env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
