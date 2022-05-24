@@ -34,11 +34,12 @@ jobs:
       working-directory: _Shared
       run: npm install
       
+    # Global
     - name: Install Global npm
       working-directory: az-drunk-Global
       run: npm install
     
-    - name: Pulumi CLI Action
+    - name: Deploy Global
       uses: pulumi/actions@v3.15.0
       env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -47,10 +48,43 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       with:
-        # Pulumi command to run, eg. up
         command: up
-        # Which stack you want to apply to, eg. dev
         stack-name: global
-        # Location of your Pulumi files. Defaults to ./
         work-dir: az-drunk-Global
+        
+    # AKS
+    - name: Install AKS npm
+      working-directory: az-drunk-Aks
+      run: npm install
+    
+    - name: Deploy Global
+      uses: pulumi/actions@v3.15.0
+      env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      with:
+        command: up
+        stack-name: ${{ env.Stack_Name }}
+        work-dir: az-drunk-Aks
+        
+    # KubeApps
+    - name: Install AKS npm
+      working-directory: az-drunk-KubeApps
+      run: npm install
+    
+    - name: Deploy Global
+      uses: pulumi/actions@v3.15.0
+      env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      with:
+        command: up
+        stack-name: ${{ env.Stack_Name }}
+        work-dir: az-drunk-KubeApps
       
