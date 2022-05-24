@@ -277,9 +277,10 @@ const rs = (async () => {
     },
     database: {
       host: 'dev-mysql-drunk.mysql.database.azure.com',
-      database: 'DrunkCodingWP',
+      database: 'drunkwpdb',
       username: 'dev4drunk',
       password: (await getSecret({name:'az-mysql-password',nameFormatted:true,vaultInfo}))?.value!,
+      requiredSSL:true
     },
     provider,
   });
