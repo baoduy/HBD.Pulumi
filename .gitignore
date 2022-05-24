@@ -2,3 +2,6 @@
 **/node_modules
 **/._*
 **/.nyc_output
+**/.idea
+**/node_modules
+**/._*

@@ -38,7 +38,7 @@ import SingaX from './SingaX';
 const rs = (async () => {
   const enableAksSql = false;
   const enablePostgreSql = false;
-  const enableMySql = true;
+  const enableMySql = false;
   const enableWiki = false;
   const enableReverseProxy = false;
   const storageClassName = 'cs-csi-standard';
@@ -141,6 +141,24 @@ const rs = (async () => {
   //   provider,
   // });
 
+  //Wiki
+  //Drunk coding WP
+  await WordPress({
+    name: 'wp',
+    namespace: 'tools',
+    hostNames: [envDomain, `www.${envDomain}`, `wp.${envDomain}`],
+    volume: {
+      storageClass: storageClassName,
+    },
+    database: {
+      host: 'dev-mysql-drunk.mysql.database.azure.com',
+      database: 'DrunkCodingWP',
+      username: 'dev4drunk',
+      password: (await getSecret({name:'az-mysql-password',nameFormatted:true,vaultInfo}))?.value!,
+    },
+    provider,
+  });
+
   //Install Additional Apps
   if (enableAksSql) {
     await SqlServer({
@@ -153,7 +171,7 @@ const rs = (async () => {
   }
 
   if (enableMySql) {
-    const mySql = await MariaDb({
+    await MariaDb({
       name: 'my-sql',
       namespace: 'tools',
       storageClassName,
@@ -161,46 +179,9 @@ const rs = (async () => {
       provider,
     });
 
-    await MySql({
-      name: 'my-sql-v2',
-      version: '8.0.27',
-      namespace: 'tools',
-      //customPort: 3307,
-      useClusterIP: true,
-      storageClassName,
-      vaultInfo,
-      provider,
-    });
-
-    const yaml_provider = new k8s.Provider('render-yaml', {
-      renderYamlToDirectory: 'yaml-files',
-    });
-
-    await MySql({
-      name: 'singa-sql',
-      namespace: 'tools',
-
-      storageClassName,
-      vaultInfo,
-      provider: yaml_provider,
-    });
-
-    //Drunk coding WP
-    await WordPress({
-      name: 'wp',
-      namespace: 'tools',
-      hostNames: [envDomain, `www.${envDomain}`, `wp.${envDomain}`],
-      volume: {
-        storageClass: storageClassName,
-      },
-      database: {
-        host: mySql.host,
-        database: 'DrunkCodingWP',
-        username: 'root',
-        password: mySql.password,
-      },
-      provider,
-    });
+    // const yaml_provider = new k8s.Provider('render-yaml', {
+    //   renderYamlToDirectory: 'yaml-files',
+    // });
   }
 
   if (enablePostgreSql) {
