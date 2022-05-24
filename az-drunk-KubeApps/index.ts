@@ -39,6 +39,7 @@ const rs = (async () => {
   const enableAksSql = false;
   const enablePostgreSql = false;
   const enableMySql = false;
+  const enableRedisCache = false;
   const enableWiki = false;
   const enableReverseProxy = false;
   const storageClassName = 'cs-csi-standard';
@@ -141,23 +142,7 @@ const rs = (async () => {
   //   provider,
   // });
 
-  //Wiki
-  //Drunk coding WP
-  await WordPress({
-    name: 'wp',
-    namespace: 'tools',
-    hostNames: [envDomain, `www.${envDomain}`, `wp.${envDomain}`],
-    volume: {
-      storageClass: storageClassName,
-    },
-    database: {
-      host: 'dev-mysql-drunk.mysql.database.azure.com',
-      database: 'DrunkCodingWP',
-      username: 'dev4drunk',
-      password: (await getSecret({name:'az-mysql-password',nameFormatted:true,vaultInfo}))?.value!,
-    },
-    provider,
-  });
+
 
   //Install Additional Apps
   if (enableAksSql) {
@@ -266,18 +251,37 @@ const rs = (async () => {
   // await WebApp({ namespace: 'dev', provider });
 
   //Redis Cache
-  await RedisCache({
-    name: 'redis-cache',
-    namespace: 'tools',
-    //storageClassName,
-    provider,
-  });
+  if(enableRedisCache) {
+    await RedisCache({
+      name: 'redis-cache',
+      namespace: 'tools',
+      //storageClassName,
+      provider,
+    });
+  }
 
   //Install Projects
   SingaX({
     namespace: stack,
     provider,
     dependsOn: [...resources, ...namespacesList],
+  });
+
+  //Wiki - Drunk coding WP
+  await WordPress({
+    name: 'wp',
+    namespace: 'tools',
+    hostNames: [envDomain, `www.${envDomain}`, `wp.${envDomain}`],
+    volume: {
+      storageClass: storageClassName,
+    },
+    database: {
+      host: 'dev-mysql-drunk.mysql.database.azure.com',
+      database: 'DrunkCodingWP',
+      username: 'dev4drunk',
+      password: (await getSecret({name:'az-mysql-password',nameFormatted:true,vaultInfo}))?.value!,
+    },
+    provider,
   });
 
   //Install Tools
