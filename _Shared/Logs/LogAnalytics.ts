@@ -19,7 +19,7 @@ export default ({
   name,
   group,
   sku = operationalinsights.WorkspaceSkuNameEnum.Free,
-  dailyQuotaGb = 0.1,
+  dailyQuotaGb = 0.023,
   vaultInfo,
 }: Props) => {
   name = getLogWpName(name);
