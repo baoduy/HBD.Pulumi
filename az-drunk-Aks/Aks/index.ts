@@ -78,7 +78,10 @@ export default async ({
         osDiskType: isPrd ? 'Ephemeral' : 'Managed',
       },
     ],
-    featureFlags: { createServicePrincipal: true },
+    featureFlags: {
+      createServicePrincipal: true,
+      enableDiagnosticSetting: false,
+    },
 
     network: {
       subnetId: network.subnetId,

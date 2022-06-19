@@ -79,6 +79,8 @@ export enum VmSizes {
   Standard_B4ms_154 = 'Standard_B4ms',
   /** 8G RAM - 2CPU - 87.60 */
   Standard_D2as_v4_87 = 'Standard_D2as_v4',
+  /** 8G RAM - 2CPU - 87.60 */
+  Standard_D2s_v3_87 = 'Standard_D2s_v3',
   /** 16G RAM - 4CPU - $175.20 */
   Standard_D4as_v4_175 = 'Standard_D4as_v4',
   /** 4G RAM - 2CPU - $69.35 */
@@ -123,6 +125,7 @@ interface Props extends BasicResourceArgs {
   featureFlags?: {
     createServicePrincipal?: boolean;
     enablePodIdentity?: boolean;
+    enableDiagnosticSetting?: boolean;
   };
 
   aksAccess?: {
@@ -165,7 +168,7 @@ export default async ({
   log,
   aksAccess = {},
   vaultInfo,
-  featureFlags = {},
+  featureFlags = { enableDiagnosticSetting: true },
   addon = {
     enableAzurePolicy: true,
     enableAzureKeyVault: true,
@@ -429,6 +432,7 @@ export default async ({
       ignoreChanges: [
         'privateLinkResources',
         'networkProfile',
+        'linuxProfile',
         //'windowsProfile',
         //'servicePrincipalProfile.secret',
       ],
@@ -439,24 +443,26 @@ export default async ({
     Locker({ name, resourceId: aks.id, dependsOn: aks });
   }
 
-  aks.id.apply(async (id) => {
-    if (!id) return;
+  if (featureFlags.enableDiagnosticSetting) {
+    aks.id.apply(async (id) => {
+      if (!id) return;
 
-    //Diagnostic
-    await createDiagnostic({
-      name,
-      targetResourceId: id,
-      ...log,
-      logsCategories: [
-        'guard',
-        'kube-controller-manager',
-        'kube-audit-admin',
-        'kube-audit',
-        'kube-scheduler',
-        'cluster-autoscaler',
-      ],
+      //Diagnostic
+      await createDiagnostic({
+        name,
+        targetResourceId: id,
+        ...log,
+        logsCategories: [
+          'guard',
+          'kube-controller-manager',
+          'kube-audit-admin',
+          'kube-audit',
+          'kube-scheduler',
+          'cluster-autoscaler',
+        ],
+      });
     });
-  });
+  }
 
   if (enableVMAutoScale) {
     //Apply auto scale
