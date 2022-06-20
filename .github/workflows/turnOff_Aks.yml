@@ -5,7 +5,8 @@ name: TurnOff_AKS
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: 0 0 * * *
+    # 12AM SGT is 4PM UTC
+    - cron: 0 16 * * *
 
 jobs:
   build:
