@@ -17,8 +17,9 @@ interface Props extends DefaultAksArgs {
     username: Input<string>;
     password: Input<string>;
     database: Input<string>;
-    requiredSSL?:boolean;
+    requiredSSL?: boolean;
   };
+  options?: { enableDebug?: boolean };
 }
 
 export default ({
@@ -28,6 +29,7 @@ export default ({
   volume,
   database,
   provider,
+  options = {},
 }: Props) => {
   const claim = volume
     ? createPVCForStorageClass({
@@ -41,12 +43,15 @@ export default ({
   return Deployment({
     name,
     namespace,
+    configMap: { WORDPRESS_DEBUG: options.enableDebug ? '1' : '' },
     secrets: {
       WORDPRESS_DB_HOST: database.host,
       WORDPRESS_DB_USER: database.username,
       WORDPRESS_DB_PASSWORD: database.password,
       WORDPRESS_DB_NAME: database.database,
-      WORDPRESS_CONFIG_EXTRA: database.requiredSSL?"define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);":''
+      WORDPRESS_CONFIG_EXTRA: database.requiredSSL
+        ? "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);"
+        : '',
     },
     podConfig: {
       port: 80,

@@ -290,6 +290,7 @@ const rs = (async () => {
       )?.value!,
       requiredSSL: true,
     },
+    options: { enableDebug: true },
     provider,
   });
 
