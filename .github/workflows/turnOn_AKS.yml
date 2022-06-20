@@ -7,8 +7,6 @@ on:
   schedule:
     # 12AM UTC is 8AM SGT
     - cron: 0 0 * * *
-  push:
-    branches: [main]
 
 jobs:
   build:
