@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: TurnOn_AKS
+
+# Controls when the workflow will run
+on:
+  schedule:
+    # 12AM UTC is 8AM SGT
+    - cron: 0 0 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Pulumi CLI
+        uses: pulumi/setup-pulumi@v2
+        
+      # Share
+      - name: Install Tool npm
+        working-directory: _Shared
+        run: npm run preinstall
+
+      - name: Install Share npm
+        working-directory: _Shared
+        run: npm install
+        
+      # AKS
+      - name: Install AksOnOff npm
+        working-directory: az-drunk-AksOnOff
+        run: npm install
+
+      - name: Turn On AKS
+        uses: pulumi/actions@v3.15.0
+        env:
+            PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+            ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+            ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+            ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+            ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        with:
+          command: destroy
+          stack-name: dev
+          work-dir: az-drunk-AksOnOff

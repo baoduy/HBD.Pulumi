@@ -52,7 +52,11 @@ const rs = (async () => {
     ? undefined
     : await getIpAddressResource({ name: aksGroupName, group });
 
-  const tcpPorts: any = { '6379': 'tools/redis-cache:6379' };
+  const tcpPorts: any = {};
+
+  if (enableRedisCache) {
+    tcpPorts['6379'] = 'tools/redis-cache:6379';
+  }
 
   if (enableMySql) {
     tcpPorts['3306'] = 'tools/my-sql-mariadb:3306';
@@ -141,8 +145,6 @@ const rs = (async () => {
   //   namespaces: namespacesList.map((n) => n.metadata.name),
   //   provider,
   // });
-
-
 
   //Install Additional Apps
   if (enableAksSql) {
@@ -251,7 +253,7 @@ const rs = (async () => {
   // await WebApp({ namespace: 'dev', provider });
 
   //Redis Cache
-  if(enableRedisCache) {
+  if (enableRedisCache) {
     await RedisCache({
       name: 'redis-cache',
       namespace: 'tools',
@@ -279,9 +281,16 @@ const rs = (async () => {
       host: 'dev-mysql-drunk.mysql.database.azure.com',
       database: 'drunkwpdb',
       username: 'dev4drunk',
-      password: (await getSecret({name:'az-mysql-password',nameFormatted:true,vaultInfo}))?.value!,
-      requiredSSL:true
+      password: (
+        await getSecret({
+          name: 'az-mysql-password',
+          nameFormatted: true,
+          vaultInfo,
+        })
+      )?.value!,
+      requiredSSL: true,
     },
+    options: { enableDebug: true },
     provider,
   });
 

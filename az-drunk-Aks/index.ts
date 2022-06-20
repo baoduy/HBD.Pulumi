@@ -155,7 +155,7 @@ const rs = (async () => {
 
   const aksSubId = findSubnet('aks').apply((c) => c!.id!);
   //Ask
-  const { privateZone } = await Aks({
+  await Aks({
     name: aksClusterName,
     group,
     vmSize: VmSizes.Standard_B2ms_77,
@@ -184,7 +184,7 @@ const rs = (async () => {
     log: global.logWpInfo,
     vaultInfo,
 
-    lock: true,
+    lock: false,
     dependsOn: [publicIpAddress!, vnet],
   });
 

@@ -16,7 +16,7 @@ interface Props extends BasicResourceArgs {
   vaultInfo?: KeyVaultInfo;
 }
 
-export default async ({ group, name, dailyCapGb = 1, vaultInfo }: Props) => {
+export default async ({ group, name, dailyCapGb = 0.023, vaultInfo }: Props) => {
   name = getAppInsightName(name);
 
   const appInsight = new native.insights.Component(name, {
