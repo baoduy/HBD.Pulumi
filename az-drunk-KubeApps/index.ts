@@ -34,6 +34,7 @@ import Storage from '../_Shared/Storage';
 import { AksAzureStorageSecret } from '../_Shared/KubeX/ConfigSecret';
 import * as k8s from '@pulumi/kubernetes';
 import SingaX from './SingaX';
+import ApiCertAuth from './Apps/ApiCertAuth';
 
 const rs = (async () => {
   const enableAksSql = false;
@@ -293,6 +294,9 @@ const rs = (async () => {
     options: { enableDebug: true },
     provider,
   });
+
+  //Other Apis
+  await ApiCertAuth({ namespace: stack, provider });
 
   //Install Tools
   await Tools({
