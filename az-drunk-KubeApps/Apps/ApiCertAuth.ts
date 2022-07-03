@@ -4,22 +4,30 @@ import { defaultConfig } from '../../_Shared/Common/AppConfigs/dotnetConfig';
 import { envDomain } from '../../_Shared/Common/AzureEnv';
 
 interface Props extends Omit<DefaultAksArgs, 'name'> {
-  version?: string;
+  clientThumbprints?: Array<{ thumbprint: string; roles: string[] }>;
 }
 
-export default async ({ namespace, provider, version }: Props) => {
+export default async ({ namespace, provider, clientThumbprints }: Props) => {
   const name = 'api-cert-auth';
-  const nameWithVersion = version ? `${name}-${version}` : name;
   const image = 'baoduy2412/api-cert-auth';
 
+  const config: any = {};
+
+  clientThumbprints?.forEach((c) => {
+    config['Authentication__CertAuth__Thumbprint'] = c.thumbprint;
+    c.roles.forEach(
+      (r, index) => (config[`Authentication__CertAuth__Roles__${index}`] = r)
+    );
+  });
+
   return await Deployment({
-    name: nameWithVersion,
+    name,
     namespace,
     provider,
 
     configMap: {
       ...defaultConfig,
-      AppName: `The application version ${version || 'master'}`,
+      ...config,
     },
 
     podConfig: {
@@ -36,9 +44,10 @@ export default async ({ namespace, provider, version }: Props) => {
     ingressConfig: {
       certManagerIssuer: true,
       hostNames: [`${name}.${envDomain}`],
-      canary: version
-        ? { headerKey: 'X-App-Version', headerValue: version }
-        : undefined,
+      auth: {
+        enableClientTls: true,
+        caSecret: 'dev/tls-api-cert-auth-drunkcoding-net-lets',
+      },
     },
 
     enableHA: { maxReplicas: 3 },

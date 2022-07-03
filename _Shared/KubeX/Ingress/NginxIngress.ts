@@ -63,6 +63,13 @@ export interface IngressProps {
     tlsSecretName?: Input<string>;
   };
 
+  auth?: {
+    enableClientTls?: boolean;
+    caSecret?: string;
+    upstreamHeaderKey?: string;
+    errorPage?: string;
+  };
+
   service:
     | kx.Service
     | k8s.core.v1.Service
@@ -88,6 +95,7 @@ export default ({
   tlsSecretName,
   canary,
   proxy,
+  auth,
   responseHeaders,
   whitelistIps,
   enableModSecurity,
@@ -164,6 +172,28 @@ export default ({
       annotations['nginx.ingress.kubernetes.io/proxy-ssl-secret'] =
         proxy.tlsSecretName;
     }
+  }
+
+  if (auth?.enableClientTls === true) {
+    // Enable client certificate authentication
+    annotations['nginx.ingress.kubernetes.io/auth-tls-verify-client'] = 'on';
+    // Create the secret containing the trusted ca certificates
+    if (auth.caSecret)
+      annotations['nginx.ingress.kubernetes.io/auth-tls-secret'] =
+        auth.caSecret;
+    // Specify the verification depth in the client certificates chain
+    annotations['nginx.ingress.kubernetes.io/auth-tls-verify-depth'] = '1';
+    // Specify an error page to be redirected to verification errors
+    if (auth.errorPage)
+      annotations['nginx.ingress.kubernetes.io/auth-tls-error-page'] =
+        auth.errorPage;
+    // Specify if certificates are passed to upstream server
+    annotations[
+      'nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream'
+    ] = 'true';
+    annotations[
+      'nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream-header'
+    ] = auth.upstreamHeaderKey ?? 'x-forwarded-client-cert';
   }
 
   const responseSecurity: any = {
