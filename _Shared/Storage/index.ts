@@ -50,6 +50,12 @@ interface StorageProps extends BasicResourceArgs {
     enableAccountLevelEncryption?: boolean;
   };
 
+  policies: {
+    keyExpirationPeriodInDays?: Input<number>;
+    blobSoftDeleteDays?: Input<number>;
+    containerSoftDeleteDays?: Input<number>;
+  };
+
   firewall?: { subnetId?: Input<string>; ipAddresses?: Array<string> };
 
   onKeysLoaded?: (
@@ -72,6 +78,7 @@ export default ({
   appInsight,
   firewall,
   featureFlags = {},
+  policies = { keyExpirationPeriodInDays: 365 },
   onKeysLoaded,
   lock = true,
 }: StorageProps) => {
@@ -105,12 +112,13 @@ export default ({
     enableHttpsTrafficOnly: true,
     allowBlobPublicAccess: false,
     allowSharedKeyAccess: featureFlags.allowSharedKeyAccess,
-
     identity: { type: 'SystemAssigned' },
     minimumTlsVersion: 'TLS1_2',
 
     //1 Year Months
-    keyPolicy: { keyExpirationPeriodInDays: 365 },
+    keyPolicy: {
+      keyExpirationPeriodInDays: policies.keyExpirationPeriodInDays,
+    },
 
     encryption:
       keyInfo && featureFlags.enableAccountLevelEncryption
@@ -162,7 +170,18 @@ export default ({
     Locker({ name, resourceId: stg.id, dependsOn: stg });
   }
 
-  //Enable Static Website fro SPA
+  new storage.BlobServiceProperties('', {
+    deleteRetentionPolicy: {
+      enabled: Boolean(policies.blobSoftDeleteDays),
+      days: policies.blobSoftDeleteDays || 180,
+    },
+    containerDeleteRetentionPolicy: {
+      enabled: Boolean(policies.containerSoftDeleteDays),
+      days: policies.containerSoftDeleteDays || 180,
+    },
+  });
+
+  //Enable Static Website for SPA
   if (featureFlags.enableStaticWebsite) {
     new storage.StorageAccountStaticWebsite(name, {
       accountName: stg.name,
