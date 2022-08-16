@@ -50,7 +50,7 @@ interface StorageProps extends BasicResourceArgs {
     enableAccountLevelEncryption?: boolean;
   };
 
-  policies: {
+  policies?: {
     keyExpirationPeriodInDays?: Input<number>;
     blobSoftDeleteDays?: Input<number>;
     containerSoftDeleteDays?: Input<number>;
@@ -117,7 +117,7 @@ export default ({
 
     //1 Year Months
     keyPolicy: {
-      keyExpirationPeriodInDays: policies.keyExpirationPeriodInDays,
+      keyExpirationPeriodInDays: policies.keyExpirationPeriodInDays!,
     },
 
     encryption:
@@ -170,14 +170,21 @@ export default ({
     Locker({ name, resourceId: stg.id, dependsOn: stg });
   }
 
-  new storage.BlobServiceProperties('', {
+  new storage.BlobServiceProperties(name, {
+    accountName: stg.name,
+    ...group,
+
     deleteRetentionPolicy: {
-      enabled: Boolean(policies.blobSoftDeleteDays),
-      days: policies.blobSoftDeleteDays || 180,
+      enabled:
+        policies.blobSoftDeleteDays != undefined &&
+        policies.blobSoftDeleteDays > 0,
+      days: policies.blobSoftDeleteDays,
     },
     containerDeleteRetentionPolicy: {
-      enabled: Boolean(policies.containerSoftDeleteDays),
-      days: policies.containerSoftDeleteDays || 180,
+      enabled:
+        policies.containerSoftDeleteDays != undefined &&
+        policies.containerSoftDeleteDays > 0,
+      days: policies.containerSoftDeleteDays,
     },
   });
 
