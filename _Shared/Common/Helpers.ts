@@ -1,22 +1,22 @@
-import { Output, all } from "@pulumi/pulumi";
+import { Output, all } from '@pulumi/pulumi';
 
-export function outputPromise<T>(
-  values: Array<Output<T | undefined> | undefined>
-): Promise<T[]>;
-
-export function outputPromise<T>(
-  value: Output<T | undefined> | undefined
-): Promise<T>;
-
-export function outputPromise<T>(values: any): any {
-  if (Array.isArray(values))
-    return new Promise<T[]>((resolve) =>
-      all(values).apply((v) => resolve(v as T[]))
-    );
-  return new Promise<T>((resolve) =>
-    all([values]).apply((v) => resolve(v[0] as T))
-  );
-}
+// export function outputPromise<T>(
+//   values: Array<Output<T | undefined> | undefined>
+// ): Promise<T[]>;
+//
+// export function outputPromise<T>(
+//   value: Output<T | undefined> | undefined
+// ): Promise<T>;
+//
+// export function outputPromise<T>(values: any): any {
+//   if (Array.isArray(values))
+//     return new Promise<T[]>((resolve) =>
+//       all(values).apply((v) => resolve(v as T[]))
+//     );
+//   return new Promise<T>((resolve) =>
+//     all([values]).apply((v) => resolve(v[0] as T))
+//   );
+// }
 
 export function replaceAll(value: string, search: string, replace: string) {
   if (!value) return value;
@@ -29,10 +29,10 @@ export const shallowEquals = (obj1: any, obj2: any) =>
 
 /** Get Domain from Url*/
 export const getDomainFromUrl = (url: string) =>
-  url.replace("https://", "").replace("http://", "").split("/")[0];
+  url.replace('https://', '').replace('http://', '').split('/')[0];
 
 /** Get Root Domain from Url or Sub domain*/
 export const getRootDomainFromUrl = (url: string) => {
-  const array = getDomainFromUrl(url).split(".");
-  return array.slice(Math.max(array.length - 2, 0)).join(".");
+  const array = getDomainFromUrl(url).split('.');
+  return array.slice(Math.max(array.length - 2, 0)).join('.');
 };
