@@ -170,23 +170,23 @@ export default ({
     Locker({ name, resourceId: stg.id, dependsOn: stg });
   }
 
-  new storage.BlobServiceProperties(name, {
-    accountName: stg.name,
-    ...group,
-
-    deleteRetentionPolicy: {
-      enabled:
-        policies.blobSoftDeleteDays != undefined &&
-        policies.blobSoftDeleteDays > 0,
-      days: policies.blobSoftDeleteDays,
-    },
-    containerDeleteRetentionPolicy: {
-      enabled:
-        policies.containerSoftDeleteDays != undefined &&
-        policies.containerSoftDeleteDays > 0,
-      days: policies.containerSoftDeleteDays,
-    },
-  });
+  // new storage.BlobServiceProperties(name, {
+  //   accountName: stg.name,
+  //   ...group,
+  //
+  //   deleteRetentionPolicy: {
+  //     enabled:
+  //       policies.blobSoftDeleteDays != undefined &&
+  //       policies.blobSoftDeleteDays > 0,
+  //     days: policies.blobSoftDeleteDays,
+  //   },
+  //   containerDeleteRetentionPolicy: {
+  //     enabled:
+  //       policies.containerSoftDeleteDays != undefined &&
+  //       policies.containerSoftDeleteDays > 0,
+  //     days: policies.containerSoftDeleteDays,
+  //   },
+  // });
 
   //Enable Static Website for SPA
   if (featureFlags.enableStaticWebsite) {
