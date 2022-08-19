@@ -176,7 +176,8 @@ export default ({
 
   if (auth?.enableClientTls === true) {
     // Enable client certificate authentication
-    annotations['nginx.ingress.kubernetes.io/auth-tls-verify-client'] = 'on';
+    annotations['nginx.ingress.kubernetes.io/auth-tls-verify-client'] =
+      'optional';
     // Create the secret containing the trusted ca certificates
     if (auth.caSecret)
       annotations['nginx.ingress.kubernetes.io/auth-tls-secret'] =
@@ -193,7 +194,7 @@ export default ({
     ] = 'true';
     annotations[
       'nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream-header'
-    ] = auth.upstreamHeaderKey ?? 'x-forwarded-client-cert';
+    ] = auth.upstreamHeaderKey ?? 'ssl-client-cert';
   }
 
   const responseSecurity: any = {
