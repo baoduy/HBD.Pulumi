@@ -65,6 +65,7 @@ export interface IngressProps {
 
   auth?: {
     enableClientTls?: boolean;
+    alwaysRequireCert?: boolean;
     caSecret?: string;
     upstreamHeaderKey?: string;
     errorPage?: string;
@@ -177,7 +178,7 @@ export default ({
   if (auth?.enableClientTls === true) {
     // Enable client certificate authentication
     annotations['nginx.ingress.kubernetes.io/auth-tls-verify-client'] =
-      'optional';
+      auth.alwaysRequireCert ? 'on' : 'optional';
     // Create the secret containing the trusted ca certificates
     if (auth.caSecret)
       annotations['nginx.ingress.kubernetes.io/auth-tls-secret'] =
