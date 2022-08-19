@@ -40,7 +40,7 @@ export default ({ namespace, provider, dependsOn }: Props) => {
     hostNames: [`bms.singa.solutions`],
     cors,
     responseHeaders,
-    auth: { enableClientTls: true, upstreamHeaderKey: 'X-ARR-ClientCert' },
+    auth: { enableClientTls: true },
     certManagerIssuer: true,
     tlsSecretName: 'tls-bms-lets',
     service: {
